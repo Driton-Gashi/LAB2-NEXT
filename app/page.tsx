@@ -1,95 +1,137 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+"use client"
+import { useState, useEffect } from "react";
+import { formatDistanceToNow } from "date-fns";
+import Header from "@/components/header";
+import Post from "../components/homeComponents/Post";
+import { fetchLatestPost, fetchUsers, fetchPosts } from "@/utils/api";
+import Link from "next/link";
 
-export default function Home() {
+type LatestPost = {
+  id: number,
+  title: {rendered: string},
+  date: string ,
+  excerpt: {rendered: string},
+  _embedded?: {
+    'wp:featuredmedia': [
+      {
+        source_url: string;
+      }
+    ];
+  };
+}
+
+type User = {
+  id: number,
+  avatar_urls: { [key: string]: string };
+  name: string,
+  description: string
+}
+
+
+const Home = () => {
+  const [posts, setPosts] = useState([]);
+  const [users, setUsers] = useState<User[]>([]);
+  const [latestPost, setLatestPost] = useState<LatestPost | null>(null);
+
+  useEffect(() => {
+    const loadContent = async () => {
+      try {
+        const latestPostData = await fetchLatestPost();
+        setLatestPost(latestPostData);
+
+        const usersData = await fetchUsers();
+        setUsers(usersData);
+
+        const postsData = await fetchPosts();
+        setPosts(postsData);
+
+      } catch (error) {
+        console.error("Error loading content:", error);
+      }
+    };
+    
+    loadContent();
+  }, []);
+
+  // Utility function to shorten excerpts
+const removeTags = (excerpt:string) => {
+  const plainText = excerpt.replace(/<[^>]+>/g, ''); 
+  return plainText.toString();
+};
+
+
+
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>app/page.tsx</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
-
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
+    <div className="inner">
+      <Header children={null}/>
+      <section id="banner">
+        <div className="content">
+          <header>
+            <h1>
+              {latestPost?.title?.rendered}
+            </h1>
+            <p>
+              {latestPost &&
+                formatDistanceToNow(new Date(latestPost.date), {
+                  addSuffix: true,
+                })}
+            </p>
+          </header>
+          <p>
+          {latestPost && removeTags(latestPost.excerpt.rendered)}
+          </p>
+          <ul className="actions">
+            <li>
+              <Link href={`post/${latestPost && latestPost.id}`} className="button big">
+                Read More
+              </Link>
+            </li>
+          </ul>
         </div>
-      </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+        <span className="image object">
+          <img src={latestPost ? latestPost?._embedded?.['wp:featuredmedia'][0].source_url : "NoImage"} alt="" />
+        </span>
+      </section>
+
+      <section>
+        <header className="major">
+          <h2>Authors</h2>
+        </header>
+        <div className="features">
+          {users.map((user) => (
+            <article title="Click To Read All Posts from this Author" key={user.id}>
+              <a style={{ border: "0" }} href={`/author/${user.id}`}>
+                <span className="icon">
+                  <img style={{ transform: "rotate(45deg)" }} src={user.avatar_urls["96"]} alt="" />
+                </span>
+              </a>
+              <div className="content">
+                <a href={`/author/${user.id}`}>
+                  <h3>{user.name}</h3>
+                </a>
+                <p>
+                  {user.description
+                    ? user.description
+                    : "Aenean ornare velit lacus, ac varius enim lorem ullamcorper dolore. Proin aliquam facilisis ante interdum. Sed nulla amet lorem feugiat tempus aliquam."}
+                </p>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section>
+        <header className="major">
+          <h2>Latest News</h2>
+        </header>
+        <div className="posts">
+          {posts.map((post, index) => (
+            <Post key={index} post={post} />
+          ))}
+        </div>
+      </section>
     </div>
   );
-}
+};
+
+export default Home;
