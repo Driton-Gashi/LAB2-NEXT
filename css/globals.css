@@ -3208,6 +3208,8 @@ button:disabled,
   text-indent: 0;
   top: 0;
   width: inherit;
+  color: #f45c5c;
+  cursor: pointer;
 }
 
 #sidebar.inactive {

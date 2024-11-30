@@ -1,9 +1,8 @@
 "use client";
-
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import NavLink from "./NavLink";
-import Footer from "./Footer";
+import NavLink from "../components/shared/NavLink";
+import Footer from "../components/shared/Footer";
 import { getCategories } from "../utils/api";
 import { useCategory } from "@/context/CategoryContext"; // Import the context hook
 
@@ -56,12 +55,12 @@ const Sidebar: React.FC = () => {
           <ul>
             <li>
               <NavLink href="/" activeClassName="active">
-                Homepage
+                Home
               </NavLink>
             </li>
             <li>
-              <NavLink href="our-news" activeClassName="active">
-                Our News
+              <NavLink href="news" activeClassName="active">
+                News
               </NavLink>
             </li>
             <li>
@@ -171,9 +170,7 @@ const Sidebar: React.FC = () => {
         <Footer />
       </div>
 
-      <NavLink href="#" className="toggle" activeClassName="active">
-        Toggle
-      </NavLink>
+      <div onClick={toggleSidebar}  className="toggle"></div>
     </div>
   );
 };

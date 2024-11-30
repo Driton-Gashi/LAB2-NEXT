@@ -1,33 +1,14 @@
 "use client"
 import { useState, useEffect } from "react";
 import { formatDistanceToNow } from "date-fns";
-import Post from "../components/homeComponents/Post";
+import Post from "@/components/shared/Post";
 import { fetchLatestPost, fetchUsers, fetchPosts } from "@/utils/api";
 import Link from "next/link";
-
-type LatestPost = {
-  id: number,
-  title: {rendered: string},
-  date: string ,
-  excerpt: {rendered: string},
-  _embedded?: {
-    'wp:featuredmedia': [
-      {
-        source_url: string;
-      }
-    ];
-  };
-}
-
-type User = {
-  id: number,
-  avatar_urls: { [key: string]: string };
-  name: string,
-  description: string
-}
+import { LatestPost, User } from "@/components/shared/Type";
+import { ArrayPostType } from "@/components/shared/Type";
 
 const Home = () => {
-  const [posts, setPosts] = useState([]);
+  const [posts, setPosts] = useState<ArrayPostType[]>([]);
   const [users, setUsers] = useState<User[]>([]);
   const [latestPost, setLatestPost] = useState<LatestPost | null>(null);
 
