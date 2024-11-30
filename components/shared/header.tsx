@@ -1,40 +1,35 @@
-import { ReactNode } from "react";
-interface HeaderProps {
-  children?: ReactNode;
-}
-
-const Header = ({children}: HeaderProps) => {
+import Link from "next/link"
+const Header = () => {
     return (
       <header id="header">
           <div className="logo">
-            {children?children:<strong>LAB 2 Project</strong>}
-            
+            <strong>LAB 2 Project</strong>
           </div>
           <ul className="icons">
             <li>
-              <a href="#" className="icon brands fa-twitter">
+              <Link href="#" className="icon brands fa-twitter">
                 <span className="label">Twitter</span>
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="#" className="icon brands fa-facebook-f">
+              <Link href="#" className="icon brands fa-facebook-f">
                 <span className="label">Facebook</span>
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="#" className="icon brands fa-snapchat-ghost">
+              <Link href="#" className="icon brands fa-snapchat-ghost">
                 <span className="label">Snapchat</span>
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="#" className="icon brands fa-instagram">
+              <Link href="#" className="icon brands fa-instagram">
                 <span className="label">Instagram</span>
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="#" className="icon brands fa-medium-m">
+              <Link href="#" className="icon brands fa-medium-m">
                 <span className="label">Medium</span>
-              </a>
+              </Link>
             </li>
           </ul>
         </header>
