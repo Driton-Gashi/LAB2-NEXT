@@ -1,7 +1,6 @@
 "use client"
 import { useState, useEffect } from "react";
 import { formatDistanceToNow } from "date-fns";
-import Header from "@/components/header";
 import Post from "../components/homeComponents/Post";
 import { fetchLatestPost, fetchUsers, fetchPosts } from "@/utils/api";
 import Link from "next/link";
@@ -26,7 +25,6 @@ type User = {
   name: string,
   description: string
 }
-
 
 const Home = () => {
   const [posts, setPosts] = useState([]);
@@ -59,11 +57,8 @@ const removeTags = (excerpt:string) => {
   return plainText.toString();
 };
 
-
-
   return (
-    <div className="inner">
-      <Header children={null}/>
+    <>
       <section id="banner">
         <div className="content">
           <header>
@@ -89,7 +84,7 @@ const removeTags = (excerpt:string) => {
           </ul>
         </div>
         <span className="image object">
-          <img src={latestPost ? latestPost?._embedded?.['wp:featuredmedia'][0].source_url : "NoImage"} alt="" />
+          <img src={latestPost ? latestPost?._embedded?.['wp:featuredmedia'][0].source_url : "./loading.gif"} alt="" />
         </span>
       </section>
 
@@ -130,7 +125,7 @@ const removeTags = (excerpt:string) => {
           ))}
         </div>
       </section>
-    </div>
+      </>
   );
 };
 

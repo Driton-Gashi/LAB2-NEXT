@@ -1,19 +1,19 @@
+"use client";
+
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import NavLink from "./NavLink";
 import Footer from "./Footer";
 import { getCategories } from "../utils/api";
-
-type SidebarProps = {
-  changeCategoryName: (categoryId: number) => void; // Adjusted return type to `void`
-};
+import { useCategory } from "@/context/CategoryContext"; // Import the context hook
 
 type CategoryType = {
   id: number;
   name: string;
 };
 
-const Sidebar = ({ changeCategoryName }: SidebarProps) => {
+const Sidebar: React.FC = () => {
+  const { setCategory } = useCategory(); // Access the setCategory function from context
   const [categories, setCategories] = useState<CategoryType[]>([]);
   const [sidebarActive, setSidebarActive] = useState(false);
   const [isFirstSubmenuActive, setIsFirstSubmenuActive] = useState(false);
@@ -36,6 +36,10 @@ const Sidebar = ({ changeCategoryName }: SidebarProps) => {
   const toggleFirstMenu = () => setIsFirstSubmenuActive(!isFirstSubmenuActive);
   const toggleSecondMenu = () => setIsSecondSubmenuActive(!isSecondSubmenuActive);
 
+  const handleCategoryChange = (categoryId: number) => {
+    setCategory(categoryId); // Update the category in context
+  };
+
   return (
     <div id="sidebar" className={sidebarActive ? "" : "inactive"}>
       <div className="inner">
@@ -51,10 +55,14 @@ const Sidebar = ({ changeCategoryName }: SidebarProps) => {
           </header>
           <ul>
             <li>
-              <NavLink href="/" activeClassName="active">Homepage</NavLink>
+              <NavLink href="/" activeClassName="active">
+                Homepage
+              </NavLink>
             </li>
             <li>
-              <NavLink href="our-news" activeClassName="active">Our News</NavLink>
+              <NavLink href="our-news" activeClassName="active">
+                Our News
+              </NavLink>
             </li>
             <li>
               <span
@@ -68,7 +76,7 @@ const Sidebar = ({ changeCategoryName }: SidebarProps) => {
                   <li key={category.id}>
                     <NavLink
                       href={`/news-by-category/${category.id}`}
-                      onClick={() => changeCategoryName(category.id)} // Adjusted to pass category id
+                      onClick={() => handleCategoryChange(category.id)} // Use context-based function
                       activeClassName="active"
                     >
                       {category.name}
@@ -109,26 +117,29 @@ const Sidebar = ({ changeCategoryName }: SidebarProps) => {
           <div className="mini-posts">
             <article>
               <a href="#" className="image">
-                <img src="images/pic07.jpg" alt="" />
+                <img src="./pic07.jpg" alt="" />
               </a>
               <p>
-                Aenean ornare velit lacus, ac varius enim lorem ullamcorper dolore aliquam.
+                Aenean ornare velit lacus, ac varius enim lorem ullamcorper
+                dolore aliquam.
               </p>
             </article>
             <article>
               <a href="#" className="image">
-                <img src="images/pic08.jpg" alt="" />
+                <img src="./pic08.jpg" alt="" />
               </a>
               <p>
-                Aenean ornare velit lacus, ac varius enim lorem ullamcorper dolore aliquam.
+                Aenean ornare velit lacus, ac varius enim lorem ullamcorper
+                dolore aliquam.
               </p>
             </article>
             <article>
               <a href="#" className="image">
-                <img src="images/pic09.jpg" alt="" />
+                <img src="./pic09.jpg" alt="" />
               </a>
               <p>
-                Aenean ornare velit lacus, ac varius enim lorem ullamcorper dolore aliquam.
+                Aenean ornare velit lacus, ac varius enim lorem ullamcorper
+                dolore aliquam.
               </p>
             </article>
           </div>
@@ -139,7 +150,10 @@ const Sidebar = ({ changeCategoryName }: SidebarProps) => {
             <h2>Get in touch</h2>
           </header>
           <p>
-            Sed varius enim lorem ullamcorper dolore aliquam aenean ornare velit lacus, ac varius enim lorem ullamcorper dolore. Proin sed aliquam facilisis ante interdum. Sed nulla amet lorem feugiat tempus aliquam.
+            Sed varius enim lorem ullamcorper dolore aliquam aenean ornare velit
+            lacus, ac varius enim lorem ullamcorper dolore. Proin sed aliquam
+            facilisis ante interdum. Sed nulla amet lorem feugiat tempus
+            aliquam.
           </p>
           <ul className="contact">
             <li className="icon solid fa-envelope">
