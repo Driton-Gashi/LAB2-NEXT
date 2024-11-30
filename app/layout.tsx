@@ -1,6 +1,7 @@
-import type { Metadata } from "next";
-import "./globals.css";
 
+import type { Metadata } from "next";
+import Sidebar from "@/components/Sidebar";
+import { useState } from "react";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -12,16 +13,19 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const [category, setCategory] = useState<number>(4);
+
+  const updateCategory = (newCategory: number) => {
+    setCategory(newCategory);
+  };
+
   return (
     <html lang="en">
       <body>
-      <div id="wrapper">
-          <main id="main">
-        {children}
-        </main>
-        {/* <Sidebar changeCategoryName={updateCategory}/> */}
+        <div id="wrapper">
+          <main id="main">{children}</main>
+          <Sidebar changeCategoryName={updateCategory} />
         </div>
-
       </body>
     </html>
   );

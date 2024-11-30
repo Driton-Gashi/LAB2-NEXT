@@ -1,5 +1,9 @@
+import { ReactNode } from "react";
+interface HeaderProps {
+  children?: ReactNode;
+}
 
-const Header = ({children}) => {
+const Header = ({children}: HeaderProps) => {
     return (
       <header id="header">
           <div className="logo">
